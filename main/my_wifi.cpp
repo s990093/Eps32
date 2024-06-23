@@ -1,6 +1,6 @@
-#include <WiFi.h>
-#include "wifi.h"
+#include "my_wifi.h"
 #include "config.h"
+#include <WiFi.h>
 
 void setupWiFi()
 {
