@@ -7,7 +7,7 @@
 #include "config.h"
 // 定义服务器地址和端口号
 
-WiFiClient client;
+extern WiFiClient client;
 
 // 定义数据结构
 struct RequestData
