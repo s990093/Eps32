@@ -1,5 +1,25 @@
 #include "tcp_client.h"
 
+void setupWiFi()
+{
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(1000);
+        Serial.println("Connecting to WiFi...");
+    }
+    Serial.println("Connected to WiFi");
+}
+
+void checkWiFiConnection()
+{
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        Serial.println("WiFi disconnected. Reconnecting...");
+        setupWiFi();
+    }
+}
+
 // WiFiClient 连接
 // 发送 GET 请求
 ResponseData sendGetRequest(const String &endpoint)

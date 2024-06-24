@@ -7,11 +7,9 @@ PrintHelper::PrintHelper()
 
 void PrintHelper::printHeader(const String &header)
 {
-    Serial.println("");
     Serial.println("===================================");
     Serial.println(header);
     Serial.println("===================================");
-    Serial.println("");
 }
 
 void PrintHelper::printKeyValue(const String &key, const String &value)
@@ -24,26 +22,17 @@ void PrintHelper::printKeyValue(const String &key, const String &value)
 void PrintHelper::printError(const String &errorMessage)
 {
     Serial.print("[ERROR] ");
-    this->basePrint();
     Serial.println(errorMessage);
 }
 
 void PrintHelper::printSuccess(const String &successMessage)
 {
     Serial.print("[SUCCESS] ");
-    this->basePrint();
     Serial.println(successMessage);
 }
 
 void PrintHelper::printDebug(const String &debugMessage)
 {
     Serial.print("[DEBUG] ");
-    this->basePrint();
     Serial.println(debugMessage);
-}
-
-
-void PrintHelper::basePrint()
-{
-    Serial.print(" -> ");
 }

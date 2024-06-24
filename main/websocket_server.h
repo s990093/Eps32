@@ -25,6 +25,8 @@ public:
     void setup();
     void loop();
 
+    void sendMessage(const String &type, const String &content);
+
 private:
     const char *ssid;
     const char *password;

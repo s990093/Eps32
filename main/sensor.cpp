@@ -6,9 +6,9 @@ void setupSensor()
 {
     pinMode(SENSOR_PIN, INPUT);
 
-#ifdef DEBUG_MODE
-    pinMode(WIFI_OK_PIN, OUTPUT);
-#endif
+    // #ifdef DEBUG_MODE
+    //     pinMode(, OUTPUT);
+    // #endif
 
     for (int i = 0; i < NUM_LEDS; i++)
     {

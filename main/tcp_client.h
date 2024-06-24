@@ -23,6 +23,8 @@ struct ResponseData
 };
 
 // 函数声明
+void setupWiFi();
+void checkWiFiConnection();
 ResponseData sendGetRequest(const String &endpoint);
 ResponseData sendPostRequest(const String &endpoint, const String &body);
 
