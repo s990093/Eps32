@@ -1,9 +1,13 @@
 #include <Arduino.h>
 #include "config.h"
-#include "my_wifi.h"
 #include "sensor.h"
+
+// tcp/ip
+#include "my_wifi.h"
 #include "tcp_client.h"
 #include "websocket_server.h"
+
+// helper functions
 #include "PrintHelper.h"
 
 PrintHelper printHelper;
@@ -13,7 +17,7 @@ void setup()
     Serial.begin(SERIAL_BAUD_RATE);
     printHelper.printHeader("System Setup");
 
-    setupWiFi();
+    // setupWiFi();
     printHelper.printDebug("WiFi setup complete");
 
     // WebSocketClient webSocketClient("yourSSID", "yourPASSWORD");
@@ -26,10 +30,6 @@ void setup()
 
 void loop()
 {
-    checkWiFiConnection();
-
-    // 模擬感測器數據讀取
-    int sensorData = readSensor();
-
-    delay(BASE_DELAY); // 每隔1秒更新一次感測器數據
+    // checkWiFiConnection();
+    led_run();
 }

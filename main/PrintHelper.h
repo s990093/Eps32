@@ -13,6 +13,10 @@ public:
     void printError(const String &errorMessage);
     void printSuccess(const String &successMessage);
     void printDebug(const String &debugMessage);
+
+    private:
+
+    void basePrint();
 };
 
 #endif // PRINT_HELPER_H

@@ -5,6 +5,12 @@
 /// @todo
 #define DEBUG_MODE true // Enable or disable debug mode
 
+// LED Configuration
+#define LED_PIN 13 // Pin number for the LED
+const int LED_ARRAY_PINS[] = {23, 22, 21};
+#define LED_DELAY_TIME 100
+#define NUM_LEDS 3
+
 // Base Configuration
 #define SERIAL_BAUD_RATE 115200 // Baud rate for serial communication
 #define BASE_DELAY 1000         // Base delay in milliseconds
@@ -36,9 +42,10 @@
 #define SENSOR_READ_INTERVAL 2000 // Sensor read interval in milliseconds
 
 // LED Configuration
-#define LED_PIN 13  // Pin number for the LED
-#define LED_ON HIGH // LED on state
-#define LED_OFF LOW // LED off state
+#define LED_PIN 13     // Pin number for the LED
+#define WIFI_OK_PIN 23 // Pin number for the LED
+#define LED_ON HIGH    // LED on state
+#define LED_OFF LOW    // LED off state
 
 // Additional Configuration Parameters
 #define DEVICE_NAME "your_device_name" // Name of your device
