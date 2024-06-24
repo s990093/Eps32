@@ -1,6 +1,4 @@
-#include <Arduino.h>
-#include "config.h"
-#include "sensor.h"
+#include "GPIO.h"
 
 void setupSensor()
 {
@@ -18,6 +16,7 @@ void setupSensor()
 
 int readSensor()
 {
+
     return analogRead(SENSOR_PIN);
 }
 

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "config.h"
-#include "sensor.h"
+#include "GPIO.h"
 #include "tcp_client.h"
 #include "websocket_server.h"
 #include "PrintHelper.h"
