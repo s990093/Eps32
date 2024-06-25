@@ -45,8 +45,7 @@ void setup()
     // 启用定时器中断
     timerAlarmEnable(timer);
 
-    // Example jobs
-    scheduler.addJob(&heartbeat, 1000);
+    // scheduler.addJob(&heartbeat, 1000);
 }
 
 void loop()
@@ -57,5 +56,5 @@ void loop()
 
     // sendGetRequest("/test/");
 
-    webSocketClient.sendMessage(100.2);
+    // webSocketClient.sendMessage(200.2);
 }

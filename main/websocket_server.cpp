@@ -1,8 +1,22 @@
 #include "websocket_server.h"
+
+// 静态成员初始化
 Body WebSocketClient::body;
+String WebSocketClient::currentDevice;
+String WebSocketClient::currentState;
+
+// WebSocket timeout in milliseconds
+unsigned long lastPingTime = 0;
+const unsigned long pingInterval = 10000;
+
+unsigned long lastReconnectAttempt = 0;
+const unsigned long reconnectDelay = 5000;
 
 WebSocketClient::WebSocketClient(const char *ssid, const char *password)
-    : ssid(ssid), password(password) {}
+    : ssid(ssid), password(password)
+{
+    // Constructor implementation
+}
 
 void WebSocketClient::onMessageCallback(WebsocketsMessage message)
 {
@@ -27,8 +41,34 @@ void WebSocketClient::onMessageCallback(WebsocketsMessage message)
     const char *device = doc["device"];
     const char *state = doc["state"];
 
+    // 更新当前设备和状态
     currentDevice = String(device);
     currentState = String(state);
+
+    Serial.print("currentState -> ");
+    Serial.println(currentState);
+
+    if (currentState == STATE_PLAY)
+    {
+        digitalWrite(Debug_LED, LED_ON); // Turn LED on
+    }
+    else if (currentState == STATE_STOP)
+    {
+        digitalWrite(Debug_LED, LED_OFF); // Turn LED off
+    }
+    else if (currentState == STATE_ON)
+    {
+        digitalWrite(OUTPUT_SIGNAL_ESP32, LED_ON); // Turn ESP32 signal on
+    }
+    else if (currentState == STATE_OFF)
+    {
+        digitalWrite(OUTPUT_SIGNAL_ESP32, LED_OFF); // Turn ESP32 signal off
+    }
+    else
+    {
+        digitalWrite(Debug_LED, LED_OFF);           // Turn LED off (default action)
+        digitalWrite(OUTPUT_SIGNAL_ESP32, LED_OFF); // Turn ESP32 signal off (default action)
+    }
 }
 
 void WebSocketClient::onEventsCallback(WebsocketsEvent event, String data)
@@ -40,6 +80,7 @@ void WebSocketClient::onEventsCallback(WebsocketsEvent event, String data)
     else if (event == WebsocketsEvent::ConnectionClosed)
     {
         Serial.println("Connection Closed");
+        lastReconnectAttempt = millis(); // 记录断开连接的时间
     }
     else if (event == WebsocketsEvent::GotPing)
     {
@@ -69,6 +110,40 @@ void WebSocketClient::setup()
     // Run callback when events are occurring
     client.onEvent(onEventsCallback);
 
+    // Connect to WebSocket server
+    connectWebSocket();
+}
+
+void WebSocketClient::loop()
+{
+    if (WiFi.status() != WL_CONNECTED)
+    {
+        // 尝试重新连接WiFi
+        Serial.println("WiFi disconnected. Attempting to reconnect...");
+        WiFi.reconnect();
+        delay(1000);
+    }
+
+    if (!client.available() && millis() - lastReconnectAttempt > reconnectDelay)
+    {
+        // WebSocket断开连接且已经等待了足够长时间，尝试重新连接
+        Serial.println("WebSocket disconnected. Attempting to reconnect...");
+        connectWebSocket();
+        lastReconnectAttempt = millis();
+    }
+
+    client.poll();
+
+    // 发送ping消息作为心跳检测
+    if (millis() - lastPingTime > pingInterval)
+    {
+        client.ping();
+        lastPingTime = millis();
+    }
+}
+
+void WebSocketClient::connectWebSocket()
+{
     // Build the WebSocket connection string
     String websocketConnectionString = String("ws://") + WEBSOCKET_SERVER;
 
@@ -77,47 +152,46 @@ void WebSocketClient::setup()
     // Connect to server
     client.connect(websocketConnectionString.c_str());
 
-    // Send a message
-    client.send("Hello Server");
-
-    // Send a ping
-    client.ping();
+    if (client.available())
+    {
+        // 连接成功后发送初始消息
+        client.send("Hello Server");
+    }
 }
 
-void WebSocketClient::loop()
-{
-    client.poll();
-}
-
-String WebSocketClient::getState()
+// 获取最新的设备信息
+String WebSocketClient::getDevice() const
 {
     return currentDevice;
 }
 
-String WebSocketClient::getDevice()
+// 获取最新的状态信息
+String WebSocketClient::getState() const
 {
     return currentState;
 }
 
-// @brief sned message
+// @brief send message
 void WebSocketClient::sendMessage(double brightness)
 {
-    // Construct JSON message
-    String jsonString = "{\"device\":\"";
-    jsonString.concat(DEVICE_NAME);
-    jsonString.concat("\",\"deivce\":\"send_brightness\",\"brightness\":");
-    jsonString.concat(String(brightness));
-    jsonString.concat("}");
-
-    // Send message via WebSocket if connected
-    if (client.available())
-    {
-        client.send(jsonString);
-    }
-    else
+    // Check if WebSocket client is connected
+    if (!client.available())
     {
         Serial.println("WebSocket is not connected.");
+        return;
     }
+
+    // Construct JSON message
+    StaticJsonDocument<200> doc; // Adjust capacity as needed
+    doc["device"] = DEVICE_NAME;
+    doc["brightness"] = brightness;
+
+    // Serialize JSON document to a String
+    String jsonString;
+    serializeJson(doc, jsonString);
+
+    // Send message via WebSocket
+    client.send(jsonString);
 }
 
 bool Body::fromJson(const String &jsonString)

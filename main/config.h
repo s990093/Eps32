@@ -11,11 +11,21 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 #define LED_DELAY_TIME 100
 #define NUM_LEDS 3
 #define Debug_LED 2
+#define OUTPUT_SIGNAL_ARDUINO 23
+#define OUTPUT_SIGNAL_ESP32 22
 
+// output configuration
+#define OUTPUT_PALYE_MUSIC_PIN 6
 #define TIMER_NUMBER 0               // 定时器编号
 #define TIMER_PRESCALER 80           // 分频系数
 #define TIMER_COUNT_UP true          // 是否向上计数
 #define TIMER_INTERVAL_MICROS 500000 // 定时器间隔，单位为微秒
+
+// state configuration
+#define STATE_ON "on"
+#define STATE_OFF "off"
+#define STATE_PLAY "play"
+#define STATE_STOP "stop"
 
 // interrupts
 #define prescaler 80
@@ -44,7 +54,7 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 // WebSocket Configuration
 #define WEBSOCKET_SERVER "49.213.238.75:8000/ws/chat/test/" // WebSocket server address
 #define WEBSOCKET_PORT 8000                                 // WebSocket server port
-#define WEBSOCKET_TIMEOUT 5000                              // WebSocket timeout in milliseconds
+#define WEBSOCKET_TIMEOUT 5000
 
 // Sensor Configuration
 #define SENSOR_PIN 34             // Pin number for the sensor

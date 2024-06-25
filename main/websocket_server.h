@@ -21,11 +21,14 @@ class WebSocketClient
 {
 public:
     WebSocketClient(const char *ssid, const char *password);
-
+    // 存储接收到的设备和状态信息
+    static String currentDevice;
+    static String currentState;
     void setup();
     void loop();
-    String getState();
-    String getDevice();
+    String getDevice() const;
+    String getState() const;
+
     void sendMessage(double brightness);
 
 private:
@@ -36,12 +39,9 @@ private:
 
     static void onMessageCallback(WebsocketsMessage message);
     static void onEventsCallback(WebsocketsEvent event, String data);
+    void connectWebSocket();
 
     static Body body;
-
-    // 存储接收到的设备和状态信息
-    String currentDevice;
-    String currentState;
 };
 
 // void webSocketEvent_v2(WStype_t type, const uint8_t *payload, size_t length);
