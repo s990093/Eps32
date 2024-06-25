@@ -2,12 +2,11 @@
 #define TCP_CLIENT_H
 
 #include <Arduino.h>
-#include <WiFi.h>             // 如果使用WiFi连接
-#include <WiFiClientSecure.h> // 如果使用WiFi连接和SSL（HTTPS）连接
+#include <WiFi.h> // 如果使用WiFi连接
 #include "config.h"
-// 定义服务器地址和端口号
+#include <HTTPClient.h>
 
-extern WiFiClient client;
+// 定义服务器地址和端口号
 
 // 定义数据结构
 struct RequestData

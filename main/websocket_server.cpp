@@ -1,5 +1,4 @@
 #include "websocket_server.h"
-
 Body WebSocketClient::body;
 
 WebSocketClient::WebSocketClient(const char *ssid, const char *password)
@@ -10,17 +9,26 @@ void WebSocketClient::onMessageCallback(WebsocketsMessage message)
     Serial.print("Got Message: ");
     Serial.println(message.data());
 
-    if (body.fromJson(message.data()))
+    // 创建一个静态 JSON 缓存对象
+    StaticJsonDocument<200> doc;
+
+    // 解析收到的 JSON 消息
+    DeserializationError error = deserializeJson(doc, message.data());
+
+    // 检查是否解析成功
+    if (error)
     {
-        Serial.print("Type: ");
-        Serial.println(body.type);
-        Serial.print("Content: ");
-        Serial.println(body.content);
+        Serial.print("deserializeJson() failed: ");
+        Serial.println(error.f_str());
+        return;
     }
-    else
-    {
-        Serial.println("Failed to parse JSON");
-    }
+
+    // 获取 JSON 数据中的字段
+    const char *device = doc["device"];
+    const char *state = doc["state"];
+
+    currentDevice = String(device);
+    currentState = String(state);
 }
 
 void WebSocketClient::onEventsCallback(WebsocketsEvent event, String data)
@@ -45,7 +53,6 @@ void WebSocketClient::onEventsCallback(WebsocketsEvent event, String data)
 
 void WebSocketClient::setup()
 {
-    Serial.begin(115200);
     // Connect to WiFi
     WiFi.begin(ssid, password);
 
@@ -63,7 +70,9 @@ void WebSocketClient::setup()
     client.onEvent(onEventsCallback);
 
     // Build the WebSocket connection string
-    String websocketConnectionString = String("ws://") + WEBSOCKET_SERVER + ":" + String(WEBSOCKET_PORT);
+    String websocketConnectionString = String("ws://") + WEBSOCKET_SERVER;
+
+    Serial.println(websocketConnectionString);
 
     // Connect to server
     client.connect(websocketConnectionString.c_str());
@@ -80,11 +89,25 @@ void WebSocketClient::loop()
     client.poll();
 }
 
+String WebSocketClient::getState()
+{
+    return currentDevice;
+}
+
+String WebSocketClient::getDevice()
+{
+    return currentState;
+}
+
 // @brief sned message
-void WebSocketClient::sendMessage(const String &type, const String &content)
+void WebSocketClient::sendMessage(double brightness)
 {
     // Construct JSON message
-    String jsonString = "{\"type\":\"" + type + "\",\"content\":\"" + content + "\"}";
+    String jsonString = "{\"device\":\"";
+    jsonString.concat(DEVICE_NAME);
+    jsonString.concat("\",\"deivce\":\"send_brightness\",\"brightness\":");
+    jsonString.concat(String(brightness));
+    jsonString.concat("}");
 
     // Send message via WebSocket if connected
     if (client.available())

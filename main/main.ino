@@ -22,30 +22,40 @@ void IRAM_ATTR onTimer()
 
 void setup()
 {
+    // printHelper.printDebug("Job added to scheduler");
     Serial.begin(SERIAL_BAUD_RATE);
     printHelper.printHeader("System Setup");
 
+    setupWiFi();
     printHelper.printDebug("WiFi setup complete");
+
+    webSocketClient.setup();
     printHelper.printDebug("WebSocket client setup complete");
 
     setupSensor();
 
     printHelper.printDebug("Sensor setup complete");
 
-    timer = timerBegin(0, 80, true);             // Timer 0, prescaler 80, count up
-    timerAttachInterrupt(timer, &onTimer, true); // Attach ISR
-    timerAlarmWrite(timer, 500000, true);        // 0.5 second interval
-    timerAlarmEnable(timer);                     // Enable timer interrupt
+    // 初始化定时器
+    timer = timerBegin(TIMER_NUMBER, TIMER_PRESCALER, TIMER_COUNT_UP);
+    // 绑定中断服务函数
+    timerAttachInterrupt(timer, &onTimer, true);
+    // 配置定时器中断间隔
+    timerAlarmWrite(timer, TIMER_INTERVAL_MICROS, true);
+    // 启用定时器中断
+    timerAlarmEnable(timer);
 
     // Example jobs
-    scheduler.addJob(&readSensor, 1000); // Every 1 second
-
-    printHelper.printDebug("Job added to scheduler");
+    scheduler.addJob(&heartbeat, 1000);
 }
 
 void loop()
 {
     // 主循环中不需要做任何事
+    // sg90();
+    webSocketClient.loop();
 
-    led_run();
+    // sendGetRequest("/test/");
+
+    webSocketClient.sendMessage(100.2);
 }

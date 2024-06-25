@@ -10,18 +10,28 @@
 const int LED_ARRAY_PINS[] = {23, 22, 21};
 #define LED_DELAY_TIME 100
 #define NUM_LEDS 3
+#define Debug_LED 2
+
+#define TIMER_NUMBER 0               // 定时器编号
+#define TIMER_PRESCALER 80           // 分频系数
+#define TIMER_COUNT_UP true          // 是否向上计数
+#define TIMER_INTERVAL_MICROS 500000 // 定时器间隔，单位为微秒
+
+// interrupts
+#define prescaler 80
+#define alarm_value 500000
 
 // Base Configuration
 #define SERIAL_BAUD_RATE 115200 // Baud rate for serial communication
 #define BASE_DELAY 1000         // Base delay in milliseconds
 
 // WiFi Configuration
-#define WIFI_SSID "your_wifi_ssid"         // Your WiFi SSID
-#define WIFI_PASSWORD "your_wifi_password" // Your WiFi password
+#define WIFI_SSID "Lai"            // Your WiFi SSID
+#define WIFI_PASSWORD "0987516972" // Your WiFi password
 
 // Server Configuration
-#define SERVER_ADDRESS "your_server_address" // Your server address
-#define SERVER_PORT 8000                     // Your server port
+#define SERVER_ADDRESS "http://49.213.238.75:8000"
+#define SERVER_PORT 8000 // Your server port
 
 // MQTT Configuration
 #define MQTT_BROKER "your_mqtt_broker"                   // MQTT broker address
@@ -32,9 +42,9 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 #define MQTT_TOPIC_PUBLISH "your/mqtt/publish/topic"     // MQTT publish topic
 
 // WebSocket Configuration
-#define WEBSOCKET_SERVER "your.websocket.server" // WebSocket server address
-#define WEBSOCKET_PORT 8000                      // WebSocket server port
-#define WEBSOCKET_TIMEOUT 5000                   // WebSocket timeout in milliseconds
+#define WEBSOCKET_SERVER "49.213.238.75:8000/ws/chat/test/" // WebSocket server address
+#define WEBSOCKET_PORT 8000                                 // WebSocket server port
+#define WEBSOCKET_TIMEOUT 5000                              // WebSocket timeout in milliseconds
 
 // Sensor Configuration
 #define SENSOR_PIN 34             // Pin number for the sensor
@@ -48,16 +58,16 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 #define LED_OFF LOW    // LED off state
 
 // Additional Configuration Parameters
-#define DEVICE_NAME "your_device_name" // Name of your device
-#define FIRMWARE_VERSION "1.0.0"       // Firmware version
-#define HEARTBEAT_INTERVAL 60000       // Heartbeat interval in milliseconds
-#define RECONNECT_INTERVAL 10000       // Reconnect interval in milliseconds
+#define DEVICE_NAME "ESP32"      // Name of your device
+#define FIRMWARE_VERSION "1.0.0" // Firmware version
+#define HEARTBEAT_INTERVAL 60000 // Heartbeat interval in milliseconds
+#define RECONNECT_INTERVAL 10000 // Reconnect interval in milliseconds
 
 // API Configuration
 #define API_KEY "your_api_key"           // API key for your service
 #define API_ENDPOINT "your_api_endpoint" // API endpoint URL
 
-// ㄖㄨㄟ
+// Jobs
 #define MAX_JOBS 10
 
 #endif // CONFIG_H
