@@ -5,6 +5,7 @@
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include "config.h"
+#include "PrintHelper.h"
 
 using namespace websockets;
 
@@ -21,15 +22,21 @@ class WebSocketClient
 {
 public:
     WebSocketClient(const char *ssid, const char *password);
+    virtual ~WebSocketClient() {}
+
     // 存储接收到的设备和状态信息
     static String currentDevice;
     static String currentState;
-    void setup();
+
+    void setup(PrintHelper printHelper);
     void loop();
     String getDevice() const;
     String getState() const;
 
-    void sendMessage(double brightness);
+    void sendMessage(const std::string &jsonString);
+
+protected:
+    virtual void onMessageCallback(WebsocketsMessage message) = 0;
 
 private:
     const char *ssid;
@@ -37,10 +44,8 @@ private:
 
     WebsocketsClient client;
 
-    static void onMessageCallback(WebsocketsMessage message);
-    static void onEventsCallback(WebsocketsEvent event, String data);
     void connectWebSocket();
-
+    static void onEventsCallback(WebsocketsEvent event, String data);
     static Body body;
 };
 

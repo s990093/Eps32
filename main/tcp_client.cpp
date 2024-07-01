@@ -1,22 +1,22 @@
 #include "tcp_client.h"
 
-void setupWiFi()
+void setupWiFi(PrintHelper printHelper)
 {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(1000);
-        Serial.println("Connecting to WiFi...");
+        printHelper.printSuccess("Connecting to WiFi...");
     }
-    Serial.println("Connected to WiFi");
+    printHelper.printError("Connected to WiFi");
 }
 
-void checkWiFiConnection()
+void checkWiFiConnection(PrintHelper printHelper)
 {
     if (WiFi.status() != WL_CONNECTED)
     {
-        Serial.println("WiFi disconnected. Reconnecting...");
-        setupWiFi();
+        printHelper.printDebug("WiFi disconnected. Reconnecting...");
+        setupWiFi(printHelper);
     }
 }
 

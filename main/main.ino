@@ -1,60 +1,63 @@
 #include <Arduino.h>
 #include "config.h"
-#include "GPIO.h"
-#include "tcp_client.h"
-#include "websocket_server.h"
 #include "PrintHelper.h"
-#include "jobScheduler.h"
+#include "WebSocketTasks.h"
 
-PrintHelper printHelper;
-Scheduler scheduler;
-WebSocketClient webSocketClient(WIFI_SSID, WIFI_PASSWORD);
+PrintHelper printHelper(DEBUG_MODE);
+MymyWebSocketClient myWebSocketClient(WIFI_SSID, WIFI_PASSWORD);
 
-hw_timer_t *timer = NULL;
-portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+bool continueBreathing = CONTINUE_BREATHING; // Global variable visible across the file
 
-void IRAM_ATTR onTimer()
-{
-    portENTER_CRITICAL_ISR(&timerMux);
-    scheduler.run();
-    portEXIT_CRITICAL_ISR(&timerMux);
-}
+TaskHandle_t websocketTaskHandle;
+
+void websocketTask(void *parameter);
 
 void setup()
 {
-    // printHelper.printDebug("Job added to scheduler");
-    Serial.begin(SERIAL_BAUD_RATE);
     printHelper.printHeader("System Setup");
 
-    setupWiFi();
-    printHelper.printDebug("WiFi setup complete");
+    setCpuFrequencyMhz(CpuFrequencyMhz);
+    Serial.begin(SERIAL_BAUD_RATE);
+    setupWiFi(printHelper);
+    setupSensor(printHelper);
 
-    webSocketClient.setup();
-    printHelper.printDebug("WebSocket client setup complete");
+    xTaskCreatePinnedToCore(
+        websocketTask,
+        "WebSocket Task",
+        10000, NULL,
+        10,
+        &websocketTaskHandle,
+        CORE_0); // Core 0
 
-    setupSensor();
-
-    printHelper.printDebug("Sensor setup complete");
-
-    // 初始化定时器
-    timer = timerBegin(TIMER_NUMBER, TIMER_PRESCALER, TIMER_COUNT_UP);
-    // 绑定中断服务函数
-    timerAttachInterrupt(timer, &onTimer, true);
-    // 配置定时器中断间隔
-    timerAlarmWrite(timer, TIMER_INTERVAL_MICROS, true);
-    // 启用定时器中断
-    timerAlarmEnable(timer);
-
-    // scheduler.addJob(&heartbeat, 1000);
+    xTaskCreatePinnedToCore(
+        heartbeat,          // Task function
+        "Heartbeat Task",   // Task name
+        10000,              // Stack size (bytes)
+        &continueBreathing, // Task parameter (passing address of continueBreathing)
+        0,                  // Priority (0 is the lowest priority)
+        NULL,               // Task handle (optional)
+        CORE_1              // Core to run the task on
+    );
 }
 
 void loop()
 {
-    // 主循环中不需要做任何事
-    // sg90();
-    webSocketClient.loop();
+    // Empty loop as FreeRTOS is handling the tasks
+}
 
-    // sendGetRequest("/test/");
-
-    // webSocketClient.sendMessage(200.2);
+void websocketTask(void *parameter)
+{
+    myWebSocketClient.setup(printHelper);
+    for (;;)
+    {
+        myWebSocketClient.loop();
+        // myWebSocketClient.getDevice();
+        // Check if there is an issue with myWebSocketClient
+        // if (!myWebSocketClient.isConnected())
+        // {
+        //     continueBreathing = false; // Stop breathing if WebSocket client is not connected
+        //     break;                     // Exit the loop
+        // }
+        vTaskDelay(1); // Yield to other tasks
+    }
 }

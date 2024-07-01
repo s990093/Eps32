@@ -4,6 +4,10 @@
 // Debug Configuration
 /// @todo
 #define DEBUG_MODE true // Enable or disable debug mode
+#define CpuFrequencyMhz 240
+#define CORE_0 0 // Typically used for system tasks
+#define CORE_1 1 // Typically used for user tasks
+#define CONTINUE_BREATHING false
 
 // LED Configuration
 #define LED_PIN 13 // Pin number for the LED
@@ -79,5 +83,12 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 
 // Jobs
 #define MAX_JOBS 10
+
+// GPIO
+
+// config.h
+const int STRAPPING_PINS[] = {0, 2, 4, 5, 12, 15};
+const int SPI_FLASH_PINS[] = {6, 7, 8, 9, 10, 11};
+const int INPUT_ONLY_PINS[] = {34, 35, 36, 39};
 
 #endif // CONFIG_H

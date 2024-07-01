@@ -5,7 +5,8 @@
 #include <WiFi.h> // 如果使用WiFi连接
 #include "config.h"
 #include <HTTPClient.h>
-
+#include "PrintHelper.h"
+#include "PrintHelper.h"
 // 定义服务器地址和端口号
 
 // 定义数据结构
@@ -22,8 +23,8 @@ struct ResponseData
 };
 
 // 函数声明
-void setupWiFi();
-void checkWiFiConnection();
+void setupWiFi(PrintHelper printHelper);
+void checkWiFiConnection(PrintHelper printHelper);
 ResponseData sendGetRequest(const String &endpoint);
 ResponseData sendPostRequest(const String &endpoint, const String &body);
 
