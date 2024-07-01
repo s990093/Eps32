@@ -8,7 +8,7 @@ void setupWiFi(PrintHelper printHelper)
         delay(1000);
         printHelper.printSuccess("Connecting to WiFi...");
     }
-    printHelper.printError("Connected to WiFi");
+    printHelper.printSuccess("Connected to WiFi");
 }
 
 void checkWiFiConnection(PrintHelper printHelper)
@@ -116,5 +116,42 @@ ResponseData sendPostRequest(const String &endpoint, const String &body)
     client.stop();
     Serial.println("Disconnected");
 
+    return response;
+}
+
+ResponseData sendPutRequest(const String &endpoint, const String &body)
+{
+    HTTPClient http;
+    ResponseData response;
+    http.begin(endpoint);
+    http.addHeader("Content-Type", "application/json");
+    response.statusCode = http.PUT(body);
+    if (response.statusCode > 0)
+    {
+        response.body = http.getString();
+    }
+    else
+    {
+        response.body = "Error on HTTP request";
+    }
+    http.end();
+    return response;
+}
+
+ResponseData sendDeleteRequest(const String &endpoint)
+{
+    HTTPClient http;
+    ResponseData response;
+    http.begin(endpoint);
+    response.statusCode = http.sendRequest("DELETE");
+    if (response.statusCode > 0)
+    {
+        response.body = http.getString();
+    }
+    else
+    {
+        response.body = "Error on HTTP request";
+    }
+    http.end();
     return response;
 }

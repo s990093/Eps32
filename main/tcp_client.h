@@ -27,5 +27,6 @@ void setupWiFi(PrintHelper printHelper);
 void checkWiFiConnection(PrintHelper printHelper);
 ResponseData sendGetRequest(const String &endpoint);
 ResponseData sendPostRequest(const String &endpoint, const String &body);
-
+ResponseData sendPutRequest(const String &endpoint, const String &body);
+ResponseData sendDeleteRequest(const String &endpoint);
 #endif // TCP_CLIENT_H

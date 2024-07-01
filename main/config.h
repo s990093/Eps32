@@ -7,7 +7,10 @@
 #define CpuFrequencyMhz 240
 #define CORE_0 0 // Typically used for system tasks
 #define CORE_1 1 // Typically used for user tasks
-#define CONTINUE_BREATHING false
+#define CONTINUE_BREATHING true
+
+// SPI Configuration
+#define SPI_SELECT_PIN 5
 
 // LED Configuration
 #define LED_PIN 13 // Pin number for the LED

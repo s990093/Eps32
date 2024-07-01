@@ -7,6 +7,7 @@ PrintHelper::PrintHelper(bool debugMode) : debugMode(debugMode)
 
 void PrintHelper::printHeader(const String &header)
 {
+    Serial.println("");
     Serial.println("===================================");
     Serial.println("           " + header);
     Serial.println("===================================");

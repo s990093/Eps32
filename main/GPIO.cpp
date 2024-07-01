@@ -90,8 +90,8 @@ void heartbeat(void *parameter)
         }
         else
         {
-            digitalWrite(Debug_LED, LOW);   // Ensure LED is off when breathing is stopped
-            vTaskDelay(pdMS_TO_TICKS(100)); // Delay to conserve CPU resources
+            digitalWrite(Debug_LED, LED_OFF); // Ensure LED is off when breathing is stopped
+            vTaskDelay(pdMS_TO_TICKS(100));   // Delay to conserve CPU resources
         }
     }
 }
