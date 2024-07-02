@@ -18,9 +18,9 @@ void spiTask(void *parameter);
 
 void setup()
 {
-    printHelper.printHeader("System Setup");
 
     setCpuFrequencyMhz(CpuFrequencyMhz);
+
     Serial.begin(SERIAL_BAUD_RATE);
     setupWiFi(printHelper);
     setupSensor(printHelper);
@@ -55,6 +55,15 @@ void setup()
         NULL,               // Task handle (optional)
         CORE_1              // Core to run the task on
     );
+
+    const String tasks[][2] = {
+        {"WebSocket Task", "Core 0"},
+        {"SPI Task", "Core 0"},
+        {"Heartbeat Task", "Core 1"}};
+
+    // 打印系統總結
+
+    printHelper.printSystemSummary("WiFi connected", "Core 0 and Core 1", tasks, 3);
 }
 
 void loop()

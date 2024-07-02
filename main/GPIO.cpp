@@ -66,6 +66,7 @@ void setupSensor(PrintHelper printHelper)
 }
 
 void heartbeat(void *parameter)
+
 {
     bool *continueBreathingPtr = (bool *)parameter; // Cast parameter to bool pointer
 

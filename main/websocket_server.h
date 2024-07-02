@@ -8,6 +8,7 @@
 #include "PrintHelper.h"
 
 using namespace websockets;
+extern PrintHelper printHelper;
 
 class Body
 {

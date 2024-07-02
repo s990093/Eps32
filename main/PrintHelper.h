@@ -6,15 +6,22 @@
 class PrintHelper
 {
 public:
-    PrintHelper(bool debugMode = false);
+    PrintHelper(bool debugMode);
+    void printHeader(const String &header);
+    void printKeyValue(const String &key, const String &value);
+    void printError(const String &errorMessage);
+    void printSuccess(const String &successMessage);
+    void printDebug(const String &debugMessage);
+    void printInfo(const String &infoMessage);
+    void printWarning(const String &warningMessage);
+    void printDivider();
+    void printTitleEnd();
+    void printTitle(const String &title);
+    void printSubTitle(const String &subtitle);
+    void printSystemSummary(const String &networkStatus, const String &coreUsage, const String tasks[][2], int taskCount);
 
-    virtual void printHeader(const String &header);
-    virtual void printKeyValue(const String &key, const String &value);
-    virtual void printError(const String &errorMessage);
-    virtual void printSuccess(const String &successMessage);
-    virtual void printDebug(const String &debugMessage);
-
-protected:
-    bool debugMode; // to store the debug mode state
+private:
+    bool debugMode;
 };
+
 #endif // PRINT_HELPER_H

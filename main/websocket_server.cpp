@@ -23,20 +23,20 @@ void WebSocketClient::onEventsCallback(WebsocketsEvent event, String data)
 {
     if (event == WebsocketsEvent::ConnectionOpened)
     {
-        Serial.println("Connection Opened");
+        printHelper.printInfo("Connection Opened");
     }
     else if (event == WebsocketsEvent::ConnectionClosed)
     {
-        Serial.println("Connection Closed");
+        printHelper.printInfo("Connection Closed");
         lastReconnectAttempt = millis(); // 记录断开连接的时间
     }
     else if (event == WebsocketsEvent::GotPing)
     {
-        Serial.println("Got a Ping!");
+        printHelper.printInfo("Got a Ping!");
     }
     else if (event == WebsocketsEvent::GotPong)
     {
-        Serial.println("Got a Pong!");
+        printHelper.printInfo("Got a Pong!");
     }
 }
 

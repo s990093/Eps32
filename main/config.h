@@ -43,8 +43,8 @@ const int LED_ARRAY_PINS[] = {23, 22, 21};
 #define BASE_DELAY 1000         // Base delay in milliseconds
 
 // WiFi Configuration
-#define WIFI_SSID "Lai"            // Your WiFi SSID
-#define WIFI_PASSWORD "0987516972" // Your WiFi password
+#define WIFI_SSID "eric home"            // Your WiFi SSID
+#define WIFI_PASSWORD "12345677" // Your WiFi password
 
 // Server Configuration
 #define SERVER_ADDRESS "http://49.213.238.75:8000"

@@ -73,13 +73,7 @@ ResponseData sendPostRequest(const String &endpoint, const String &body)
     Serial.print("Connecting to ");
     Serial.println(SERVER_ADDRESS);
 
-    if (!client.connect(SERVER_ADDRESS, SERVER_PORT))
-    {
-        Serial.println("Connection failed");
-        return ResponseData{-1, "Connection failed"};
-    }
-
-    // 构建 HTTP POST 请求
+     // 构建 HTTP POST 请求
     String request = "POST " + endpoint + " HTTP/1.1\r\n" +
                      "Host: " + String(SERVER_ADDRESS) + "\r\n" +
                      "Connection: close\r\n" +
