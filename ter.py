@@ -32,7 +32,7 @@ def main(serial_port):
             try:
                 if ser.in_waiting > 0:
                     line = ser.readline().decode('utf-8').strip()
-                    timestamp = datetime.now().strftime('%H:%M')  # Get current timestamp
+                    timestamp = datetime.now().strftime('%H:%M:%S')  # Get current timestamp
                     console.print(f'{timestamp} --> {line}')  # Print received data with timestamp
 
                     parts = line.split(',')

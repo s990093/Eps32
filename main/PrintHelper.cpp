@@ -70,7 +70,7 @@ void PrintHelper::printTitleEnd()
 {
     Serial.println("");
 
-    Serial.println("************************");
+    Serial.println("**************************");
     Serial.println("");
 }
 

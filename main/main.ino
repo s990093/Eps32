@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "config.h"
 #include "PrintHelper.h"
-#include "WebSocketTasks.h"
 #include "spi_communication.h"
+#include "WebSocketTasks.h"
 
 PrintHelper printHelper(DEBUG_MODE);
 MymyWebSocketClient myWebSocketClient(WIFI_SSID, WIFI_PASSWORD);
@@ -30,21 +30,22 @@ void setup()
     xTaskCreatePinnedToCore(
         websocketTask,
         "WebSocket Task",
-        10000, NULL,
+        10000,
+        NULL,
         10,
         &websocketTaskHandle,
         CORE_0); // Core 0
 
-    // spi
-    xTaskCreatePinnedToCore(
-        spiTask,        // 任务函数
-        "SPITask",      // 任务名称
-        2048,           // 任务堆栈大小（字节）
-        NULL,           // 传递给任务函数的参数
-        1,              // 任务优先级（1为最低，configMAX_PRIORITIES-1为最高）
-        &spiTaskHandle, // 用于存储任务句柄的指针
-        CORE_0          // core 0
-    );
+    // // spi
+    // xTaskCreatePinnedToCore(
+    //     spiTask,        // 任务函数
+    //     "SPITask",      // 任务名称
+    //     2048,           // 任务堆栈大小（字节）
+    //     NULL,           // 传递给任务函数的参数
+    //     1,              // 任务优先级（1为最低，configMAX_PRIORITIES-1为最高）
+    //     &spiTaskHandle, // 用于存储任务句柄的指针
+    //     CORE_0          // core 0
+    // );
 
     xTaskCreatePinnedToCore(
         heartbeat,          // Task function
@@ -91,7 +92,7 @@ void spiTask(void *parameter)
 {
     spiMaster.begin();
 
-    // 准备要发送的JSON数据
+    // 准备要发送z的JSON数据
     DynamicJsonDocument doc(200); // 设置JSON文档大小
     doc["sensor"] = "temperature";
     doc["value"] = 25.5;
@@ -110,6 +111,8 @@ void spiTask(void *parameter)
     while (1)
     {
         spiMaster.transfer(slaveSelectPin, data, dataLength);
+
+        printHelper.printInfo("spiMaster Transfer");
 
         // 延时一段时间
         vTaskDelay(pdMS_TO_TICKS(1000)); // 延时1秒

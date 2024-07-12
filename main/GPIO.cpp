@@ -1,6 +1,5 @@
 #include "GPIO.h"
 #include "PrintHelper.h"
-int speakerPin = 9;
 
 const int NUM_STRAPPING_PINS = sizeof(STRAPPING_PINS) / sizeof(STRAPPING_PINS[0]);
 const int NUM_SPI_FLASH_PINS = sizeof(SPI_FLASH_PINS) / sizeof(SPI_FLASH_PINS[0]);
@@ -66,32 +65,22 @@ void setupSensor(PrintHelper printHelper)
 }
 
 void heartbeat(void *parameter)
-
 {
-    bool *continueBreathingPtr = (bool *)parameter; // Cast parameter to bool pointer
-
-    static bool state = false;
-    static uint8_t brightness = 0;
-    static int8_t fadeAmount = 5;
+    bool *continueBlinkingPtr = (bool *)parameter; // Cast parameter to bool pointer
 
     for (;;)
     {
-        if (*continueBreathingPtr) // Dereference the pointer to check the value
+        if (*continueBlinkingPtr) // Dereference the pointer to check the value
         {
-            analogWrite(Debug_LED, brightness);
+            digitalWrite(Debug_LED, LED_ON); // Turn LED on
+            vTaskDelay(pdMS_TO_TICKS(20));   // Delay 500 milliseconds (half second)
 
-            brightness = brightness + fadeAmount;
-
-            if (brightness <= 0 || brightness >= 255)
-            {
-                fadeAmount = -fadeAmount;
-            }
-
-            vTaskDelay(pdMS_TO_TICKS(50)); // Adjust the delay as needed for the breathing effect
+            digitalWrite(Debug_LED, LED_OFF); // Turn LED off
+            vTaskDelay(pdMS_TO_TICKS(20));    // Delay 500 milliseconds (half second)
         }
         else
         {
-            digitalWrite(Debug_LED, LED_OFF); // Ensure LED is off when breathing is stopped
+            digitalWrite(Debug_LED, LED_OFF); // Ensure LED is off when blinking is stopped
             vTaskDelay(pdMS_TO_TICKS(100));   // Delay to conserve CPU resources
         }
     }

@@ -5,7 +5,6 @@
 
 #include <ArduinoJson.h>
 #include "websocket_server.h"
-#include "PrintHelper.h"
 #include "config.h"
 #include "GPIO.h"
 #include "tcp_client.h"

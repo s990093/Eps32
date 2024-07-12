@@ -1,5 +1,4 @@
 // WebSocketTasks.cpp
-
 #include "WebSocketTasks.h"
 
 MymyWebSocketClient::MymyWebSocketClient(const char *ssid, const char *password)

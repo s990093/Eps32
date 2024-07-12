@@ -71,7 +71,7 @@ void WebSocketClient::loop()
     if (WiFi.status() != WL_CONNECTED)
     {
         // 尝试重新连接WiFi
-        Serial.println("WiFi disconnected. Attempting to reconnect...");
+        printHelper.printDebug("WiFi disconnected. Attempting to reconnect...");
         WiFi.reconnect();
         delay(1000);
     }
@@ -79,7 +79,7 @@ void WebSocketClient::loop()
     if (!client.available() && millis() - lastReconnectAttempt > reconnectDelay)
     {
         // WebSocket断开连接且已经等待了足够长时间，尝试重新连接
-        Serial.println("WebSocket disconnected. Attempting to reconnect...");
+        printHelper.printDebug("WebSocket disconnected. Attempting to reconnect...");
         connectWebSocket();
         lastReconnectAttempt = millis();
     }
@@ -99,7 +99,7 @@ void WebSocketClient::connectWebSocket()
     // Build the WebSocket connection string
     String websocketConnectionString = String("ws://") + WEBSOCKET_SERVER;
 
-    Serial.println(websocketConnectionString);
+    printHelper.printDebug(websocketConnectionString);
 
     // Connect to server
     client.connect(websocketConnectionString.c_str());
