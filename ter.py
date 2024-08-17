@@ -9,6 +9,7 @@ import click
 # Store received data
 data = {'x': [], 'y': []}
 
+
 # Initialize console for rich output
 console = Console()
 
